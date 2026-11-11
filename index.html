@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سينما الفضاء</title>
+<meta name="theme-color" content="#070b24">
+<meta name="description" content="تعلّم، اكتشف، وشاهد أسرار الكون!">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سينما الفضاء">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--cy:#5ee7ff;--ink:#0d1325;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none;touch-action:manipulation;height:100%;margin:0;background:#03040c;overflow:hidden;font-family:'Cairo',Tahoma,Arial,sans-serif;color:#e8fbff;user-select:none}
+#box{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px)}
+#stage{position:absolute;left:50%;top:50%;width:360px;height:640px;margin:-320px 0 0 -180px;transform:scale(var(--s,1));overflow:hidden;border-radius:16px;background:linear-gradient(#070b24,#1a1250 60%,#2a1250);box-shadow:0 0 0 3px #1c2a55,0 18px 60px #000}
+#bg{position:absolute;inset:0}
+.tn{animation:tn 3s ease-in-out infinite alternate}@keyframes tn{from{opacity:.25}}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;padding:22px 18px 22px;text-align:center}
+.screen.active{display:flex}
+.tw-on{animation:pop .6s cubic-bezier(.34,1.56,.64,1) backwards;animation-delay:var(--d,0s)}
+@keyframes pop{from{transform:scale(0) rotate(-8deg);opacity:0}}
+.flt{animation:flt 3.2s ease-in-out infinite}@keyframes flt{50%{transform:translateY(-7px)}}
+.spin{animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.ic{width:100%;height:100%;overflow:visible}
+button{font-family:inherit;cursor:pointer;border:0;padding:0;color:inherit;background:none}
+.btn{font-weight:900;border-radius:16px;padding:10px 28px;font-size:22px;transition:transform .1s,filter .15s;line-height:1.15}
+.btn:hover{filter:brightness(1.15);transform:scale(1.04)}.btn:active{transform:translateY(4px) scale(.97)}
+.btn:disabled{opacity:.4;pointer-events:none}
+.or{background:linear-gradient(#ffb04a,#d9751c);border:3px solid #ffd79a;color:#fff;box-shadow:0 5px 0 #8a4a10,0 0 22px #ff9a3c88;display:flex;align-items:center;gap:10px;text-shadow:0 2px 0 #8a4a10}
+.or small{display:block;font-size:12px;font-weight:700;opacity:.9}
+.cb{background:linear-gradient(#7defff,#2ab4d6);border:3px solid #bff6ff;color:#05233a;box-shadow:0 5px 0 #14708a,0 0 20px #5ee7ff88}
+.gb{background:linear-gradient(#8af0b2,#2faa63);border:3px solid #d2ffe3;color:#06301a;box-shadow:0 5px 0 #17653a}
+.rb{background:linear-gradient(#ff8f8f,#d93d4a);border:3px solid #ffd0d0;color:#fff;box-shadow:0 5px 0 #84202a}
+.ghost{font-size:14px;font-weight:700;color:var(--cy);border:2px solid #5ee7ff66;border-radius:12px;padding:4px 12px}
+.plate{border:4px solid #7f9bb4;border-radius:16px;background:linear-gradient(#17314f,#0b1a30);box-shadow:inset 0 0 0 3px #0b1a30,inset 0 0 0 5px #3ad0f0,0 0 24px #3ad0f066;width:100%}
+.glow{color:var(--cy);text-shadow:0 0 12px #5ee7ffaa,0 0 2px #fff}
+h1{margin:0;font-size:56px;font-weight:900;line-height:1.3;background:linear-gradient(#fff,#6fe9ff 60%,#2ab4d6);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 8px #5ee7ff)}
+h2{margin:0;font-size:22px;font-weight:900}
+.hud{background:rgba(8,20,44,.82);border:3px solid var(--cy);border-radius:18px;box-shadow:0 0 18px #5ee7ff44,inset 0 0 22px #5ee7ff18;width:100%;padding:16px}
+p{margin:0;line-height:1.9;font-size:15.5px}
+#inp{width:100%;font:700 20px 'Cairo',sans-serif;text-align:center;color:#fff;background:rgba(10,30,50,.75);border:3px solid var(--cy);border-radius:16px;padding:12px;outline:none;box-shadow:0 0 16px #5ee7ff66,inset 0 0 14px #5ee7ff33}
+#inp::placeholder{color:#8db8c8}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
+.lb{position:relative;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(#16335a,#0b1a34);border:3px solid var(--cy);border-radius:18px;box-shadow:0 0 14px #5ee7ff55,inset 0 0 18px #5ee7ff22;font-size:17px;font-weight:900;transition:transform .12s,filter .15s}
+.lb:hover{filter:brightness(1.25);transform:scale(1.04)}.lb:active{transform:scale(.94)}
+.lb .p{width:64px;height:64px}.lb small{font-size:11.5px;font-weight:700;color:#9fd8ea;line-height:1.3;padding:0 8px}
+.ck{position:absolute;top:-8px;left:-8px;width:30px;height:30px;border-radius:50%;background:#2faa63;border:3px solid #d2ffe3;font-size:16px;display:flex;align-items:center;justify-content:center}
+.dots{display:flex;gap:5px}.dots i{width:24px;height:10px;border-radius:5px;background:#24405a}.dots i.on{background:var(--cy);box-shadow:0 0 8px var(--cy)}
+.bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fact{display:flex;align-items:center;gap:8px;margin-top:12px;background:#1b2f55;border:2px solid #ffb04a;border-radius:14px;padding:8px 10px;font-size:13.5px;line-height:1.7;text-align:right}
+.fact svg{width:46px;height:70px;flex:none}
+.fb{min-height:30px;font-weight:900;font-size:17px;margin-top:10px}.fb.ok{color:#6df0a2}.fb.no{color:#ff8f8f}
+.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.dnd{display:grid;grid-template-columns:auto 1fr;gap:16px;width:100%;margin-top:6px}.col{display:flex;flex-direction:column;gap:12px}
+.chip{width:76px;height:76px;padding:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2a5d8a,#0e2442);border:3px solid var(--cy);box-shadow:0 0 14px #5ee7ff77;cursor:grab;touch-action:none;position:relative;z-index:2}
+.chip.drag{z-index:50;cursor:grabbing;box-shadow:0 0 26px var(--cy)}.chip.back{transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.chip.done{width:56px;height:56px;padding:5px;transform:none!important;cursor:default;border-color:#6df0a2}
+.target{height:76px;border:3px dashed #5ee7ff99;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:900;font-size:15px;background:rgba(8,20,44,.6)}
+.target.full{border:3px solid #6df0a2;background:#2faa6322}
+#mute{position:absolute;top:10px;left:10px;z-index:20;width:36px;height:36px;border-radius:50%;background:#0b1a30cc;border:2px solid #5ee7ff88;display:flex;align-items:center;justify-content:center}
+#mute svg{width:20px;height:20px}#mute .x{display:none}#mute.m .w{display:none}#mute.m .x{display:block}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="sun" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M50 5v14M50 81v14M5 50h14M81 50h14M18 18l10 10M72 72l10 10M82 18L72 28M28 72L18 82" fill="none"/><circle cx="50" cy="50" r="24" fill="#ffc93c"/><path d="M40 46q2-4 5 0M56 46q2-4 5 0M42 57q8 8 16 0" fill="none"/></g></symbol>
+<symbol id="earth" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3" stroke-linejoin="round"><circle cx="50" cy="50" r="36" fill="#4aa3df"/><path d="M28 36q10-9 22-3t-4 12q-12 5-18-9zM56 58q13-4 17 6t-11 15q-10-5-6-21z" fill="#7bc67e"/></g></symbol>
+<symbol id="moon" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3"><circle cx="50" cy="50" r="36" fill="#efe6cc"/><g fill="#d3c8a8"><circle cx="36" cy="40" r="7"/><circle cx="62" cy="62" r="9"/><circle cx="66" cy="34" r="4"/><circle cx="38" cy="66" r="4"/></g></g></symbol>
+<symbol id="saturn" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3"><circle cx="50" cy="50" r="23" fill="#e8b45a"/><ellipse cx="50" cy="52" rx="44" ry="11" fill="none" stroke-width="6" transform="rotate(-18 50 52)" stroke="#c9852e"/><ellipse cx="50" cy="52" rx="44" ry="11" fill="none" stroke-width="1.5" transform="rotate(-18 50 52)"/></g></symbol>
+<symbol id="mars" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3"><circle cx="50" cy="50" r="32" fill="#d9553a"/><g fill="#b3402a"><circle cx="40" cy="40" r="6"/><circle cx="62" cy="56" r="8"/><circle cx="44" cy="66" r="4"/></g></g></symbol>
+<symbol id="pnew" viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#2b2f5a" stroke="#0d1325" stroke-width="3"/><circle cx="50" cy="50" r="34" fill="none" stroke="#f4e8d0" stroke-width="1.5" stroke-dasharray="3 5"/></symbol>
+<symbol id="pq" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3"><circle cx="50" cy="50" r="34" fill="#2b2f5a"/><path d="M50 16A34 34 0 0 1 50 84Z" fill="#efe6cc"/></g></symbol>
+<symbol id="pfull" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3"><circle cx="50" cy="50" r="34" fill="#efe6cc"/><g fill="#d3c8a8"><circle cx="40" cy="40" r="6"/><circle cx="62" cy="60" r="8"/></g></g></symbol>
+<symbol id="rocket" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3" stroke-linejoin="round"><path d="M42 68q8 24 16 0z" fill="#ffc93c"/><path d="M38 52L22 74l18-6zM62 52l16 22-18-6z" fill="#ff6b4a"/><path d="M50 6c15 14 17 36 12 58H38C33 42 35 20 50 6z" fill="#f4e8d0"/><circle cx="50" cy="38" r="8" fill="#4aa3df"/></g></symbol>
+<symbol id="sat" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3" stroke-linejoin="round" transform="rotate(-35 50 50)"><rect x="5" y="41" width="27" height="18" fill="#4aa3df"/><rect x="68" y="41" width="27" height="18" fill="#4aa3df"/><path d="M32 50h6M62 50h6"/><rect x="38" y="37" width="24" height="26" rx="5" fill="#f4e8d0"/><path d="M50 37v-10M44 27h12" fill="none"/></g></symbol>
+<symbol id="cam" viewBox="0 0 100 100"><g stroke="#0d1325" stroke-width="3" stroke-linejoin="round"><circle cx="34" cy="28" r="16" fill="#c9ced6"/><circle cx="64" cy="28" r="16" fill="#c9ced6"/><circle cx="34" cy="28" r="5" fill="#0d1325"/><circle cx="64" cy="28" r="5" fill="#0d1325"/><rect x="14" y="44" width="56" height="34" rx="6" fill="#6b7a8f"/><path d="M70 54l20-8v32l-20-8z" fill="#c9ced6"/><path d="M40 78l-8 16M52 78l8 16" fill="none"/></g></symbol>
+<symbol id="kid" viewBox="0 0 100 150"><g stroke="#0d1325" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><rect x="22" y="62" width="56" height="48" rx="10" fill="#5c6270"/><rect x="32" y="104" width="15" height="30" rx="6" fill="#8d907f"/><rect x="53" y="104" width="15" height="30" rx="6" fill="#8d907f"/><rect x="29" y="128" width="21" height="14" rx="6" fill="#3a3f4d"/><rect x="50" y="128" width="21" height="14" rx="6" fill="#3a3f4d"/><rect x="12" y="68" width="15" height="36" rx="7" fill="#8d907f"/><rect x="73" y="68" width="15" height="36" rx="7" fill="#8d907f"/><circle cx="19" cy="107" r="8" fill="#4a5060"/><circle cx="81" cy="107" r="8" fill="#4a5060"/><rect x="28" y="62" width="44" height="50" rx="14" fill="#9a9d8a"/><rect x="28" y="96" width="44" height="7" fill="#4a5060"/><rect x="36" y="71" width="28" height="15" rx="3" fill="#1f3b66"/><text x="50" y="77.5" font-size="5" fill="#fff" stroke="none" text-anchor="middle" font-family="Arial" font-weight="700">SPACE</text><text x="50" y="83" font-size="5" fill="#fff" stroke="none" text-anchor="middle" font-family="Arial" font-weight="700">CINEMA</text><ellipse cx="50" cy="62" rx="20" ry="6" fill="#c9ced6"/><circle cx="50" cy="38" r="23" fill="var(--skin,#f0b48a)"/><path d="M27 36Q28 12 50 13Q72 12 73 36Q62 24 50 26Q38 24 27 36Z" fill="var(--hair,#5a3420)"/><circle cx="41" cy="42" r="3.3" fill="#2a1a14" stroke="none"/><circle cx="59" cy="42" r="3.3" fill="#2a1a14" stroke="none"/><circle cx="42" cy="41" r="1" fill="#fff" stroke="none"/><circle cx="60" cy="41" r="1" fill="#fff" stroke="none"/><circle cx="35" cy="50" r="3.5" fill="#ff8f8f" stroke="none" opacity=".6"/><circle cx="65" cy="50" r="3.5" fill="#ff8f8f" stroke="none" opacity=".6"/><path d="M43 51Q50 57 57 51" fill="none"/></g></symbol>
+<g id="pony"><path d="M70 20q22 0 16 26q-2-16-16-18z" fill="var(--hair)" stroke="#0d1325" stroke-width="2.5"/><circle cx="70" cy="22" r="4" fill="#ff6fa0" stroke="#0d1325" stroke-width="2"/></g>
+<g id="gls" fill="none" stroke="#0d1325" stroke-width="2"><circle cx="41" cy="42" r="7"/><circle cx="59" cy="42" r="7"/><path d="M48 42h4"/></g>
+<radialGradient id="gal"><stop offset="0" stop-color="#fff3d0"/><stop offset=".25" stop-color="#e9a86a"/><stop offset=".6" stop-color="#8a4f9a" stop-opacity=".7"/><stop offset="1" stop-color="#2a1250" stop-opacity="0"/></radialGradient>
+</defs></svg>
+
+<div id="box"><div id="stage">
+<svg id="bg" viewBox="0 0 360 640" preserveAspectRatio="none"></svg>
+<button id="mute" aria-label="الصوت"><svg viewBox="0 0 24 24"><path class="w" d="M3 9h4l5-4v14l-5-4H3z" fill="#5ee7ff"/><path class="w" d="M15 8q3 4 0 8M18 5q6 7 0 14" stroke="#5ee7ff" fill="none" stroke-width="2" stroke-linecap="round"/><path class="x" d="M3 9h4l5-4v14l-5-4H3z" fill="#5ee7ff77"/><path class="x" d="M15 9l6 6M21 9l-6 6" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+
+<section class="screen active" id="f1" style="justify-content:space-between">
+  <div class="tw" style="width:84px;height:84px;position:relative"><svg viewBox="0 0 100 100" style="position:absolute;inset:0" class="spin"><circle cx="50" cy="50" r="46" fill="none" stroke="#5ee7ff" stroke-width="3" stroke-dasharray="14 7" style="filter:drop-shadow(0 0 5px #5ee7ff)"/></svg><div style="position:absolute;inset:18px" class="flt"><svg class="ic"><use href="#saturn"/></svg></div></div>
+  <div class="plate tw" style="padding:6px 8px 10px"><h1>سينما الفضاء</h1><div style="font-weight:700;font-size:14px;color:#bfeaf5;margin-top:-6px">تعلّم، اكتشف، وشاهد أسرار الكون!</div></div>
+  <div class="tw" style="position:relative;width:100%;height:190px;display:flex;align-items:flex-end;justify-content:center">
+    <div class="flt" style="position:absolute;left:4px;top:4px;width:52px;height:52px"><svg class="ic"><use href="#saturn"/></svg></div>
+    <div class="flt" style="position:absolute;right:2px;top:0;width:60px;height:60px;animation-delay:-1s"><svg class="ic"><use href="#cam"/></svg></div>
+    <div class="flt" style="position:absolute;right:6px;bottom:30px;width:50px;height:50px;animation-delay:-2s"><svg class="ic"><use href="#rocket"/></svg></div>
+    <div class="flt" style="position:absolute;left:6px;bottom:34px;width:46px;height:46px;animation-delay:-.6s"><svg class="ic"><use href="#moon"/></svg></div>
+    <svg class="flt" viewBox="0 0 100 150" style="width:92px;height:138px;--hair:#6b3a1e;--skin:#f0b48a"><use href="#kid"/><use href="#pony"/></svg>
+    <svg class="flt" viewBox="0 0 100 150" style="width:112px;height:168px;margin:0 -6px;animation-delay:-.8s;--hair:#4a2a18;--skin:#e9a97a;position:relative;z-index:2"><use href="#kid"/></svg>
+    <svg class="flt" viewBox="0 0 100 150" style="width:92px;height:138px;animation-delay:-1.6s;--hair:#3b2418;--skin:#c98a5e"><use href="#kid"/><use href="#gls"/></svg>
+  </div>
+  <button id="btn" class="btn or tw"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z" fill="#fff"/></svg><span>ابدأ المغامرة<small>دخول قاعة العرض</small></span></button>
+</section>
+
+<section class="screen" id="f2" style="justify-content:space-between;padding-top:56px">
+  <svg viewBox="0 0 360 640" style="position:absolute;inset:0;pointer-events:none"><ellipse cx="180" cy="270" rx="170" ry="52" fill="url(#gal)" transform="rotate(-14 180 270)"/><ellipse cx="180" cy="330" rx="150" ry="40" fill="url(#gal)" transform="rotate(12 180 330)"/><g stroke="#3b5578" stroke-width="3"><path d="M0 170L56 205 46 340 0 395Z" fill="#1a2236"/><path d="M360 170L304 205 314 340 360 395Z" fill="#1a2236"/><rect x="118" y="168" width="124" height="40" rx="8" fill="#1a2236"/><path d="M0 480L40 372 320 372 360 480 360 560 0 560Z" fill="#131a2c"/></g><g><rect x="132" y="178" width="14" height="12" fill="#ff6b4a"/><rect x="152" y="178" width="14" height="12" fill="#ff6b4a"/><circle cx="196" cy="184" r="5" fill="#5ee7ff"/><circle cx="214" cy="184" r="5" fill="#ffc93c"/><rect x="60" y="392" width="46" height="30" rx="4" fill="#0b2a44" stroke="#5ee7ff"/><rect x="254" y="392" width="46" height="30" rx="4" fill="#0b2a44" stroke="#5ee7ff"/><circle cx="130" cy="440" r="9" fill="#3a8fb5"/><circle cx="230" cy="440" r="9" fill="#3a8fb5"/><path d="M110 470L135 400 225 400 250 470Z" fill="#5ee7ff22" stroke="#5ee7ff" stroke-width="2" stroke-dasharray="6 5" style="filter:drop-shadow(0 0 6px #5ee7ff)"/></g></svg>
+  <h2 class="glow tw" style="font-size:26px;line-height:1.5;position:relative">مرحباً بك في سينما الفضاء!<br>هل أنت مستعد للانطلاق؟</h2>
+  <div style="position:relative;width:100%;display:flex;flex-direction:column;gap:16px;align-items:center"><input id="inp" class="tw" type="text" maxlength="24" placeholder="أدخل اسمك هنا..." autocomplete="off"><button id="btn2" class="btn cb tw">🚀 ابدأ الرحلة</button></div>
+</section>
+
+<section class="screen" id="f3" style="padding-top:52px">
+  <div class="plate tw" style="padding:10px"><div id="welcomeText" class="glow" style="font-size:28px;font-weight:900"></div></div>
+  <p class="tw" style="margin:10px 0 14px;color:#bfeaf5;font-weight:700">اختر درساً لتبدأ رحلتك</p>
+  <div class="grid" id="menu"></div>
+  <svg class="flt" viewBox="0 0 100 150" style="width:62px;height:93px;margin-top:auto;--hair:#4a2a18;--skin:#e9a97a"><use href="#kid"/></svg>
+</section>
+
+<section class="screen" id="lesson" style="padding-top:52px;justify-content:flex-start"></section>
+</div></div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)},st=$("stage"),box=$("box"),sc=1,userName="",done=[0,0,0,0];
+function fit(){sc=Math.min(box.clientWidth/360,box.clientHeight/640);st.style.setProperty("--s",sc)}
+addEventListener("resize",fit);fit();
+
+/* background: stars, nebula, planets */
+(function(){var r=5;function R(){r=r*16807%2147483647;return r/2147483647}
+var h='<ellipse cx="60" cy="120" rx="150" ry="90" fill="#4b2a8a" opacity=".35"/><ellipse cx="320" cy="500" rx="170" ry="100" fill="#1d5a8a" opacity=".3"/>';
+for(var i=0;i<60;i++)h+='<circle class="tn" cx="'+R()*360+'" cy="'+R()*640+'" r="'+(R()*1.3+.4)+'" fill="#fff" style="animation-delay:'+R()*3+'s"/>';
+h+='<circle cx="330" cy="90" r="26" fill="#6b4fb0" opacity=".5"/><circle cx="24" cy="560" r="40" fill="#b05a4a" opacity=".3"/>';
+$("bg").innerHTML=h})();
+
+/* ---------- sound engine (WebAudio) ---------- */
+var AC=null,M,MU,muted=false;
+function init(){if(AC){if(AC.state==="suspended")AC.resume();return}
+ try{AC=new(window.AudioContext||window.webkitAudioContext)();M=AC.createGain();M.connect(AC.destination);MU=AC.createGain();MU.gain.value=.55;MU.connect(M);music()}catch(e){AC=null}}
+function T(f,t,d,y,v,f2){if(!AC)return;var o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime+t;o.type=y||"sine";o.frequency.setValueAtTime(f,n);if(f2)o.frequency.exponentialRampToValueAtTime(f2,n+d);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v||.2,n+.015);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(M);o.start(n);o.stop(n+d+.05)}
+function Nz(d,a,b,v){if(!AC)return;var n=AC.currentTime,len=AC.sampleRate*d|0,buf=AC.createBuffer(1,len,AC.sampleRate),x=buf.getChannelData(0);for(var i=0;i<len;i++)x[i]=Math.random()*2-1;
+ var s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=buf;f.type="bandpass";f.Q.value=1.2;f.frequency.setValueAtTime(a,n);f.frequency.exponentialRampToValueAtTime(b,n+d);g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(v,n+d*.4);g.gain.exponentialRampToValueAtTime(.001,n+d);s.connect(f);f.connect(g);g.connect(M);s.start(n)}
+var S={
+ click:function(){T(640,0,.07,"square",.07,320)},
+ whoosh:function(){Nz(.45,250,2600,.28)},
+ ok:function(){[523,659,784,1047].forEach(function(f,i){T(f,i*.09,.28,"triangle",.22)})},
+ no:function(){T(230,0,.35,"sawtooth",.16,90);T(170,.12,.3,"square",.07,70)},
+ pick:function(){T(480,0,.1,"sine",.2,900)},
+ snap:function(){T(320,0,.09,"triangle",.3,140);T(950,.05,.14,"sine",.15)},
+ tick:function(){T(1100+Math.random()*400,0,.03,"square",.04)},
+ launch:function(){Nz(1.3,110,1400,.4);T(70,0,1.3,"sawtooth",.13,420)},
+ win:function(){[523,659,784,659,784,1047,1319].forEach(function(f,i){T(f,i*.11,.32,"triangle",.24)})}};
+function music(){var A=[220,261.63,293.66,329.63,392,440,523.25];
+ [110,164.81].forEach(function(f){var o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(MU);o.start()});
+ setInterval(function(){if(!AC||AC.state!=="running")return;var o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type="triangle";o.frequency.value=A[Math.random()*A.length|0];g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.07,n+.4);g.gain.exponentialRampToValueAtTime(.001,n+2.6);o.connect(g);g.connect(MU);o.start(n);o.stop(n+2.7)},1300)}
+addEventListener("pointerdown",init);
+$("mute").onclick=function(){init();muted=!muted;if(M)M.gain.value=muted?0:1;this.classList.toggle("m",muted)};
+document.addEventListener("click",function(e){if(e.target.closest("button")&&e.target.closest("button").id!=="mute")S.click()});
+$("inp").addEventListener("input",S.tick);
+
+/* ---------- frames ---------- */
+function go(id,quiet){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active")});var s=$(id);s.classList.add("active");
+ if(!quiet)S.whoosh();
+ s.querySelectorAll(".tw").forEach(function(e,i){e.style.setProperty("--d",i*.1+"s");e.classList.remove("tw-on");void e.offsetWidth;e.classList.add("tw-on")})}
+go("f1",true);
+$("btn").onclick=function(){go("f2");setTimeout(function(){$("inp").focus()},500)};
+$("btn2").onclick=function(){var v=$("inp").value.trim();
+ if(!v){var i=$("inp");i.classList.add("shake");S.no();setTimeout(function(){i.classList.remove("shake")},400);return}
+ userName=v;S.launch();setTimeout(menu,500)};
+$("inp").onkeydown=function(e){if(e.key==="Enter")$("btn2").click()};
+
+var ORD=["الأول","الثاني","الثالث","الرابع"];
+var LESSONS=[
+{ic:"sun",t:"الشمس والمجموعة الشمسية",txt:"الشمس نجم ضخم يقع في مركز المجموعة الشمسية، وهي مصدر الضوء والحرارة لجميع الكواكب. يدور حولها ثمانية كواكب، ويدور حول بعضها أقمار.",fact:"يتسع حجم الشمس لأكثر من مليون كوكب بحجم الأرض!",q:"الشمس كوكب من كواكب المجموعة الشمسية.",a:false,why:"الشمس نجم وليست كوكباً.",dnd:[["sun","نجم"],["earth","كوكب"],["moon","قمر"]]},
+{ic:"saturn",t:"الكواكب",txt:"الأرض هي الكوكب الثالث بعداً عن الشمس. يُسمّى المريخ الكوكب الأحمر بسبب لون تربته، أما زحل فتحيط به حلقات رائعة من الجليد والصخور.",fact:"كثافة زحل أقل من كثافة الماء، فلو وُجد محيط ضخم بما يكفي لطفا فوقه!",q:"الأرض هي الكوكب الثالث بعداً عن الشمس.",a:true,why:"تأتي بعد عطارد والزهرة مباشرة.",dnd:[["saturn","الكوكب ذو الحلقات"],["mars","الكوكب الأحمر"],["earth","الكوكب الأزرق"]]},
+{ic:"moon",t:"القمر",txt:"القمر هو التابع الطبيعي الوحيد للأرض، ويدور حولها مرة كل شهر تقريباً. يتغيّر شكله في السماء بحسب موقعه من الشمس والأرض، وتُسمّى هذه التغيّرات أطوار القمر.",fact:"يبتعد القمر عن الأرض نحو ٣٫٨ سم كل عام.",q:"يدور القمر حول الأرض.",a:true,why:"فهو تابعها الطبيعي.",dnd:[["pnew","المحاق"],["pq","التربيع"],["pfull","البدر"]]},
+{ic:"rocket",t:"الصواريخ ورحلات الفضاء",txt:"ينطلق الصاروخ إلى أعلى لأنه يدفع غازات ساخنة إلى أسفل بقوة. وتحمل الصواريخ الأقمار الصناعية إلى مداراتها، وتنقل روّاد الفضاء إلى محطة الفضاء الدولية.",fact:"يشاهد روّاد المحطة الدولية شروق الشمس نحو ١٦ مرة في اليوم الواحد!",q:"يمكننا سماع الأصوات في الفضاء الخارجي.",a:false,why:"الفضاء شبه خالٍ، والصوت يحتاج إلى وسط مثل الهواء لينتقل.",dnd:[["rocket","صاروخ"],["sat","قمر صناعي"],["kid","رائد فضاء"]]}];
+function ic(n){return '<svg class="ic"><use href="#'+n+'"/></svg>'}
+
+function menu(){
+ $("welcomeText").textContent="مرحباً "+userName;
+ $("menu").innerHTML=LESSONS.map(function(l,i){return '<button class="lb tw" data-i="'+i+'">'+(done[i]?'<span class="ck">✓</span>':'')+'<div class="p flt" style="animation-delay:-'+i*.7+'s">'+ic(l.ic)+'</div>الدرس '+ORD[i]+'<small>'+l.t+'</small></button>'}).join("");
+ document.querySelectorAll(".lb").forEach(function(b){b.onclick=function(){learn(+b.dataset.i)}});go("f3")}
+function bar(n){return '<div class="bar"><button class="ghost" id="bk">← القائمة</button><div class="dots">'+[0,1,2].map(function(k){return '<i class="'+(k<=n?'on':'')+'"></i>'}).join("")+'</div></div>'}
+function learn(i){var L=LESSONS[i];
+ $("lesson").innerHTML=bar(0)+'<div class="hud tw"><div style="width:70px;height:70px;margin:-4px auto 4px" class="flt">'+ic(L.ic)+'</div><h2 class="glow">'+L.t+'</h2><p style="margin-top:10px;text-align:right">'+L.txt+'</p><div class="fact"><svg viewBox="0 0 100 150" style="--hair:#5a3420;--skin:#f0b48a"><use href="#kid"/></svg><span><b style="color:#ffb04a">هل تعلم؟</b> '+L.fact+'</span></div></div><button id="nx" class="btn or tw" style="margin-top:18px">اختبر نفسك</button>';
+ $("bk").onclick=menu;$("nx").onclick=function(){tf(i)};go("lesson")}
+function tf(i){var L=LESSONS[i];
+ $("lesson").innerHTML=bar(1)+'<div class="hud tw" style="margin-top:8px"><h2 class="glow">صح أم خطأ؟</h2><p style="font-size:19px;font-weight:700;margin:14px 0 18px">'+L.q+'</p><div style="display:flex;gap:14px;justify-content:center"><button id="yes" class="btn gb">✔ صح</button><button id="no" class="btn rb">✘ خطأ</button></div></div><div class="fb" id="fb"></div><button id="nx" class="btn or tw" style="margin-top:8px" disabled>التمرين التالي</button>';
+ $("bk").onclick=menu;
+ function ans(v){var f=$("fb");
+  if(v===L.a){S.ok();f.className="fb ok";f.textContent="أحسنت يا "+userName+"! "+L.why;$("yes").disabled=$("no").disabled=true;$("nx").disabled=false}
+  else{S.no();f.className="fb no shake";f.textContent="إجابة خاطئة، حاول مرة أخرى";setTimeout(function(){f.classList.remove("shake")},400)}}
+ $("yes").onclick=function(){ans(true)};$("no").onclick=function(){ans(false)};$("nx").onclick=function(){dnd(i)};go("lesson")}
+function dnd(i){var L=LESSONS[i],S2=$("lesson"),left=L.dnd.length;
+ var ord=L.dnd.map(function(_,k){return k}).sort(function(){return Math.random()-.5});
+ S2.innerHTML=bar(2)+'<h2 class="glow tw">اسحب كل صورة إلى مكانها الصحيح</h2><div class="dnd tw"><div class="col">'+ord.map(function(k){return '<div class="chip" data-k="'+k+'">'+ic(L.dnd[k][0])+'</div>'}).join("")+'</div><div class="col">'+L.dnd.map(function(d,k){return '<div class="target" data-k="'+k+'">'+d[1]+'</div>'}).join("")+'</div></div><div class="fb" id="fb"></div>';
+ $("bk").onclick=menu;
+ S2.querySelectorAll(".chip").forEach(function(c){var sx,sy;
+  c.onpointerdown=function(e){if(c.classList.contains("done"))return;c.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;c.classList.remove("back");c.classList.add("drag");S.pick()};
+  c.onpointermove=function(e){if(c.classList.contains("drag"))c.style.transform="translate("+(e.clientX-sx)/sc+"px,"+(e.clientY-sy)/sc+"px) scale(1.12)"};
+  c.onpointerup=function(e){if(!c.classList.contains("drag"))return;c.classList.remove("drag");
+   var t=null;document.elementsFromPoint(e.clientX,e.clientY).forEach(function(el){if(el.classList&&el.classList.contains("target"))t=el});
+   if(t&&t.dataset.k===c.dataset.k&&!t.classList.contains("full")){S.snap();setTimeout(S.ok,120);c.style.transform="";c.classList.add("done");t.classList.add("full");t.insertBefore(c,t.firstChild);left--;
+    if(!left){done[i]=1;setTimeout(S.win,500);$("fb").className="fb ok";$("fb").textContent="ممتاز يا "+userName+"! أنهيت الدرس";var b=document.createElement("button");b.className="btn or tw-on";b.style.marginTop="12px";b.textContent="العودة إلى القائمة";b.onclick=menu;S2.appendChild(b)}}
+   else{S.no();c.classList.add("back");c.style.transform="translate(0,0)"}};
+  c.onpointercancel=function(){c.classList.remove("drag");c.classList.add("back");c.style.transform="translate(0,0)"}});go("lesson")}
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+}
+</script>
+</body>
+</html>
